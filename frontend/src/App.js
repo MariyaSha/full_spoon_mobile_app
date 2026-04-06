@@ -1,22 +1,30 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import TopBar from './components/TopBar';
 import MenuDrawer from './components/MenuDrawer';
 import FilterPanel from './components/FilterPanel';
 import Homepage from './components/Homepage';
+import QuickRecipesPage from './pages/QuickRecipesPage';
+import LovedRecipesPage from './pages/LovedRecipesPage';
 import './App.css';
 
-function App() {
+function HomeLayout() {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const handleMenuToggle = () => {
-    setIsFilterOpen(false); // Close filter if open
+    setIsFilterOpen(false);
     setIsMenuOpen(!isMenuOpen);
   };
 
   const handleFilterToggle = () => {
-    setIsMenuOpen(false); // Close menu if open
+    setIsMenuOpen(false);
     setIsFilterOpen(!isFilterOpen);
+  };
+
+  const handleLovedClick = () => {
+    navigate('/loved-recipes');
   };
 
   return (
@@ -24,19 +32,28 @@ function App() {
       <TopBar 
         onMenuToggle={handleMenuToggle}
         onFilterToggle={handleFilterToggle}
+        onLovedClick={handleLovedClick}
       />
       
-      {/* Expandable Menu Panel - pushes content down */}
       <MenuDrawer isOpen={isMenuOpen} />
-      
-      {/* Expandable Filter Panel - pushes content down */}
       <FilterPanel isOpen={isFilterOpen} />
       
-      {/* Main Content - gets pushed down when panels expand */}
       <main className="pb-8">
         <Homepage />
       </main>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomeLayout />} />
+        <Route path="/quick-recipes" element={<QuickRecipesPage />} />
+        <Route path="/loved-recipes" element={<LovedRecipesPage />} />
+      </Routes>
+    </Router>
   );
 }
 

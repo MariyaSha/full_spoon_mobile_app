@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TopBar = ({ onMenuToggle, onFilterToggle }) => {
+const TopBar = ({ onMenuToggle, onFilterToggle, onLovedClick }) => {
   return (
     <div className="bg-white border-b border-gray-200 sticky top-0 z-40">
       {/* Logo and Icons Row */}
@@ -12,6 +12,7 @@ const TopBar = ({ onMenuToggle, onFilterToggle }) => {
         <div className="flex items-center space-x-4">
           {/* Heart Icon */}
           <button 
+            onClick={onLovedClick}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors active:scale-95"
             aria-label="Loved recipes"
             data-testid="heart-icon-button"
