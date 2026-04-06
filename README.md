@@ -10,8 +10,6 @@ For example, if two recipes require milk and flour, the app calculates the total
 
 The application is being developed as an **Android-first full-stack mobile app**, with plans for APK installation and future persistent storage for saved carts and user workflows.
 
----
-
 ## Core Features
 
 * Browse recipes by main categories
@@ -27,22 +25,13 @@ The application is being developed as an **Android-first full-stack mobile app**
 * Save recipes to a **Loved Recipes** list
 * Add recipes directly to a **Smart Cart**
 * Automatically aggregate ingredient quantities across recipes
-* Save carts for reuse on:
-
-  * holidays
-  * game nights
-  * events
-  * everyday shopping
-
----
+* Save carts for reuse on holidays, game nights, events and everyday shopping
 
 ## Repository Structure
 
 ### `README.md`
 
 Project overview, app purpose, and repository structure.
-
----
 
 ### `food_dataset_project.ipynb`
 
@@ -61,43 +50,23 @@ This notebook performs:
 
 This is the notebook that serves as the starting point for transforming a data science project into a real product.
 
----
-
-### `reviews_processed.parquet`
+### `data/reviews_processed.parquet`
 
 Processed and cleaned recipe dataset.
 
 This file contains the curated recipe data used as the structured source for the mobile application.
 
-It includes:
+### `data/reviews.parquet`
 
-* cleaned recipe metadata
-* ratings
-* calories
-* ingredients
-* images
-* filtering tags
-* engineered recipe features
-
----
+The raw Food.com dataset from Kaggle on which the project was based on.
+<br>
+Downloaded from: https://www.kaggle.com/datasets/irkaal/foodcom-recipes-and-reviews
 
 ### `wireframe/`
 
 Application wireframes and screen flow diagrams.
 
-This folder contains the visual blueprint for the app, including:
-
-* home page
-* filter menu
-* navigation menu
-* category pages
-* recipe pages
-* shopping cart pages
-* saved cart flow
-
-These wireframes define the UI layout and feature roadmap for the mobile app.
-
----
+This folder contains the visual blueprint for the app - defining the UI layout and feature roadmap for the mobile app.
 
 ## Project Goal
 
