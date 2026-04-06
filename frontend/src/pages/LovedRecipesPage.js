@@ -32,6 +32,7 @@ const LovedRecipesPage = () => {
         onMenuToggle={handleMenuToggle}
         onFilterToggle={handleFilterToggle}
         onLovedClick={() => navigate('/loved-recipes')}
+        onCartClick={() => navigate('/cart')}
       />
       
       <MenuDrawer isOpen={isMenuOpen} />
