@@ -6,6 +6,8 @@ import FilterPanel from './components/FilterPanel';
 import Homepage from './components/Homepage';
 import QuickRecipesPage from './pages/QuickRecipesPage';
 import LovedRecipesPage from './pages/LovedRecipesPage';
+import CartPage from './pages/CartPage';
+import CartRecipesPage from './pages/CartRecipesPage';
 import './App.css';
 
 function HomeLayout() {
@@ -27,12 +29,17 @@ function HomeLayout() {
     navigate('/loved-recipes');
   };
 
+  const handleCartClick = () => {
+    navigate('/cart');
+  };
+
   return (
     <div className="App min-h-screen bg-white" data-testid="app-container">
       <TopBar 
         onMenuToggle={handleMenuToggle}
         onFilterToggle={handleFilterToggle}
         onLovedClick={handleLovedClick}
+        onCartClick={handleCartClick}
       />
       
       <MenuDrawer isOpen={isMenuOpen} />
@@ -52,6 +59,8 @@ function App() {
         <Route path="/" element={<HomeLayout />} />
         <Route path="/quick-recipes" element={<QuickRecipesPage />} />
         <Route path="/loved-recipes" element={<LovedRecipesPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/cart-recipes" element={<CartRecipesPage />} />
       </Routes>
     </Router>
   );

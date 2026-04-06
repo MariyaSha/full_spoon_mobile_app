@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TopBar = ({ onMenuToggle, onFilterToggle, onLovedClick }) => {
+const TopBar = ({ onMenuToggle, onFilterToggle, onLovedClick, onCartClick }) => {
   return (
     <div className="bg-white border-b border-gray-200 sticky top-0 z-40">
       {/* Logo and Icons Row */}
@@ -24,6 +24,7 @@ const TopBar = ({ onMenuToggle, onFilterToggle, onLovedClick }) => {
           
           {/* Cart Icon */}
           <button 
+            onClick={onCartClick}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors active:scale-95 relative"
             aria-label="Shopping cart"
             data-testid="cart-icon-button"
