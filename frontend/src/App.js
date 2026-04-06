@@ -19,34 +19,23 @@ function App() {
     setIsFilterOpen(!isFilterOpen);
   };
 
-  const handleCloseMenu = () => {
-    setIsMenuOpen(false);
-  };
-
-  const handleCloseFilter = () => {
-    setIsFilterOpen(false);
-  };
-
   return (
-    <div className="App relative min-h-screen bg-white" data-testid="app-container">
+    <div className="App min-h-screen bg-white" data-testid="app-container">
       <TopBar 
         onMenuToggle={handleMenuToggle}
         onFilterToggle={handleFilterToggle}
       />
       
+      {/* Expandable Menu Panel - pushes content down */}
+      <MenuDrawer isOpen={isMenuOpen} />
+      
+      {/* Expandable Filter Panel - pushes content down */}
+      <FilterPanel isOpen={isFilterOpen} />
+      
+      {/* Main Content - gets pushed down when panels expand */}
       <main className="pb-8">
         <Homepage />
       </main>
-      
-      <MenuDrawer 
-        isOpen={isMenuOpen}
-        onClose={handleCloseMenu}
-      />
-      
-      <FilterPanel 
-        isOpen={isFilterOpen}
-        onClose={handleCloseFilter}
-      />
     </div>
   );
 }
