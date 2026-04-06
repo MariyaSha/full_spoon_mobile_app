@@ -8,6 +8,8 @@ import QuickRecipesPage from './pages/QuickRecipesPage';
 import LovedRecipesPage from './pages/LovedRecipesPage';
 import CartPage from './pages/CartPage';
 import CartRecipesPage from './pages/CartRecipesPage';
+import SaveCartPage from './pages/SaveCartPage';
+import SavedCartsPage from './pages/SavedCartsPage';
 import './App.css';
 
 function HomeLayout() {
@@ -61,6 +63,8 @@ function App() {
         <Route path="/loved-recipes" element={<LovedRecipesPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/cart-recipes" element={<CartRecipesPage />} />
+        <Route path="/save-cart" element={<SaveCartPage />} />
+        <Route path="/saved-carts" element={<SavedCartsPage />} />
       </Routes>
     </Router>
   );

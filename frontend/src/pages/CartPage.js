@@ -59,6 +59,7 @@ const CartPage = () => {
       <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center space-x-4">
         {/* Save Icon */}
         <button 
+          onClick={() => navigate('/save-cart')}
           className="p-2 hover:bg-gray-100 rounded-lg transition-colors active:scale-95"
           aria-label="Save cart"
           data-testid="save-cart-button"
@@ -70,8 +71,9 @@ const CartPage = () => {
         
         {/* Refresh Icon */}
         <button 
+          onClick={() => navigate('/saved-carts')}
           className="p-2 hover:bg-gray-100 rounded-lg transition-colors active:scale-95"
-          aria-label="Refresh cart"
+          aria-label="View saved carts"
           data-testid="refresh-cart-button"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
