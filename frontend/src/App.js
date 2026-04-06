@@ -10,6 +10,7 @@ import CartPage from './pages/CartPage';
 import CartRecipesPage from './pages/CartRecipesPage';
 import SaveCartPage from './pages/SaveCartPage';
 import SavedCartsPage from './pages/SavedCartsPage';
+import RecipeDetailPage from './pages/RecipeDetailPage';
 import './App.css';
 
 function HomeLayout() {
@@ -65,6 +66,7 @@ function App() {
         <Route path="/cart-recipes" element={<CartRecipesPage />} />
         <Route path="/save-cart" element={<SaveCartPage />} />
         <Route path="/saved-carts" element={<SavedCartsPage />} />
+        <Route path="/recipe/:id" element={<RecipeDetailPage />} />
       </Routes>
     </Router>
   );

@@ -1,9 +1,17 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const RecipeCard = ({ image, title, testId }) => {
+const RecipeCard = ({ image, title, testId, recipeId = '1' }) => {
+  const navigate = useNavigate();
+  
+  const handleClick = () => {
+    navigate(`/recipe/${recipeId}`);
+  };
+  
   return (
-    <div 
-      className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow duration-200 active:scale-98"
+    <button 
+      onClick={handleClick}
+      className="w-full bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow duration-200 active:scale-98"
       data-testid={testId}
     >
       <div className="flex">
@@ -13,13 +21,13 @@ const RecipeCard = ({ image, title, testId }) => {
         </div>
         
         {/* Title Area */}
-        <div className="flex-1 p-4 flex items-center">
+        <div className="flex-1 p-4 flex items-center text-left">
           <h3 className="text-base font-semibold text-gray-800 line-clamp-3">
             {title}
           </h3>
         </div>
       </div>
-    </div>
+    </button>
   );
 };
 
