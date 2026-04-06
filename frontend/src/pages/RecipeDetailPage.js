@@ -50,6 +50,7 @@ const RecipeDetailPage = () => {
           <div className="flex items-center space-x-4">
             {/* Heart Icon */}
             <button 
+              onClick={() => navigate('/loved-recipes')}
               className="p-2 hover:bg-gray-100 rounded-full transition-colors active:scale-95"
               aria-label="Loved recipes"
               data-testid="heart-icon-button"
@@ -61,6 +62,7 @@ const RecipeDetailPage = () => {
             
             {/* Cart Icon */}
             <button 
+              onClick={() => navigate('/cart')}
               className="p-2 hover:bg-gray-100 rounded-full transition-colors active:scale-95 relative"
               aria-label="Shopping cart"
               data-testid="cart-icon-button"
@@ -77,6 +79,7 @@ const RecipeDetailPage = () => {
           <div className="flex items-center space-x-4">
             {/* Heart Icon (duplicate for second row) */}
             <button 
+              onClick={() => navigate('/loved-recipes')}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors active:scale-95"
               aria-label="Add to loved"
               data-testid="add-to-loved-button"
@@ -88,6 +91,7 @@ const RecipeDetailPage = () => {
             
             {/* Cart Icon (duplicate for second row) */}
             <button 
+              onClick={() => navigate('/cart')}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors active:scale-95"
               aria-label="Add to cart"
               data-testid="add-to-cart-button"
