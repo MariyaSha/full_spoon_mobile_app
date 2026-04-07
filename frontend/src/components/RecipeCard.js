@@ -16,8 +16,20 @@ const RecipeCard = ({ image, title, testId, recipeId = '1' }) => {
     >
       <div className="flex">
         {/* Image Area */}
-        <div className="w-32 h-32 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center flex-shrink-0">
-          <span className="text-gray-400 text-sm font-medium">image</span>
+        <div className="w-32 h-32 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center flex-shrink-0 overflow-hidden">
+          {image ? (
+            <img 
+              src={image} 
+              alt={title}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.parentElement.innerHTML = '<span class="text-gray-400 text-sm font-medium">image</span>';
+              }}
+            />
+          ) : (
+            <span className="text-gray-400 text-sm font-medium">image</span>
+          )}
         </div>
         
         {/* Title Area */}

@@ -1,14 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopBar from '../components/TopBar';
 import MenuDrawer from '../components/MenuDrawer';
 import FilterPanel from '../components/FilterPanel';
 import RecipeCard from '../components/RecipeCard';
+import { getRecipesByCategory } from '../services/recipeService';
 
 const QuickRecipesPage = () => {
   const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [isFilterOpen, setIsFilterOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadRecipes = async () => {
+      try {
+        const quickRecipes = await getRecipesByCategory('quick');
+        setRecipes(quickRecipes);
+      } catch (error) {
+        console.error('Error loading quick recipes:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadRecipes();
+  }, []);
 
   const handleMenuToggle = () => {
     setIsFilterOpen(false);
@@ -19,12 +37,6 @@ const QuickRecipesPage = () => {
     setIsMenuOpen(false);
     setIsFilterOpen(!isFilterOpen);
   };
-
-  const placeholderRecipes = [
-    { id: 1, title: 'Placeholder Recipe Title 1', testId: 'recipe-card-1' },
-    { id: 2, title: 'Placeholder Recipe Title 2', testId: 'recipe-card-2' },
-    { id: 3, title: 'Placeholder Recipe Title 3', testId: 'recipe-card-3' }
-  ];
 
   return (
     <div className="min-h-screen bg-white" data-testid="quick-recipes-page">
@@ -53,15 +65,26 @@ const QuickRecipesPage = () => {
           <h1 className="text-2xl font-bold text-primary">QUICK RECIPES</h1>
         </div>
         
-        <div className="space-y-4">
-          {placeholderRecipes.map((recipe) => (
-            <RecipeCard
-              key={recipe.id}
-              title={recipe.title}
-              testId={recipe.testId}
-            />
-          ))}
-        </div>
+        {loading ? (
+          <div className="text-center py-8 text-gray-500">Loading recipes...</div>
+        ) : (
+          <>
+            <div className="mb-4 text-sm text-gray-600">
+              {recipes.length} recipes found
+            </div>
+            <div className="space-y-4">
+              {recipes.slice(0, 50).map((recipe) => (
+                <RecipeCard
+                  key={recipe.RecipeId}
+                  recipeId={recipe.RecipeId}
+                  title={recipe.Name}
+                  image={recipe.Images && recipe.Images[0]}
+                  testId={`recipe-card-${recipe.RecipeId}`}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </main>
     </div>
   );

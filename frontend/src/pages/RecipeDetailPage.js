@@ -1,7 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import MenuDrawer from '../components/MenuDrawer';
 import FilterPanel from '../components/FilterPanel';
+import { 
+  getRecipeById, 
+  parseDuration, 
+  formatIngredients, 
+  getInstructions,
+  formatCalories,
+  getStarRating
+} from '../services/recipeService';
 
 const RecipeDetailPage = () => {
   const navigate = useNavigate();
@@ -9,6 +17,23 @@ const RecipeDetailPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [recipe, setRecipe] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadRecipe = async () => {
+      try {
+        const recipeData = await getRecipeById(id);
+        setRecipe(recipeData);
+      } catch (error) {
+        console.error('Error loading recipe:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadRecipe();
+  }, [id]);
 
   const handleMenuToggle = () => {
     setIsFilterOpen(false);
@@ -20,22 +45,36 @@ const RecipeDetailPage = () => {
     setIsFilterOpen(!isFilterOpen);
   };
 
-  const ingredients = [
-    { name: 'FLOUR', quantity: '1 KG' },
-    { name: 'CHICKEN', quantity: '500 G' },
-    { name: 'MILK', quantity: '2 L' }
-  ];
-
-  // Placeholder images (3 for carousel demonstration)
-  const totalImages = 3;
-
   const handlePrevImage = () => {
-    setCurrentImageIndex((prev) => (prev === 0 ? totalImages - 1 : prev - 1));
+    if (!recipe || !recipe.Images) return;
+    setCurrentImageIndex((prev) => (prev === 0 ? recipe.Images.length - 1 : prev - 1));
   };
 
   const handleNextImage = () => {
-    setCurrentImageIndex((prev) => (prev === totalImages - 1 ? 0 : prev + 1));
+    if (!recipe || !recipe.Images) return;
+    setCurrentImageIndex((prev) => (prev === recipe.Images.length - 1 ? 0 : prev + 1));
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-gray-500">Loading recipe...</div>
+      </div>
+    );
+  }
+
+  if (!recipe) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-gray-500">Recipe not found</div>
+      </div>
+    );
+  }
+
+  const ingredients = formatIngredients(recipe.RecipeIngredientQuantities, recipe.RecipeIngredientParts);
+  const instructions = getInstructions(recipe);
+  const totalImages = recipe.Images ? recipe.Images.length : 0;
+  const starRating = getStarRating(recipe.AggregatedRating);
 
   return (
     <div className="min-h-screen bg-white" data-testid="recipe-detail-page">
@@ -136,38 +175,57 @@ const RecipeDetailPage = () => {
             </svg>
           </button>
           <h1 className="text-2xl font-bold text-primary" data-testid="recipe-title">
-            RECIPE TITLE
+            {recipe.Name}
           </h1>
         </div>
         
         {/* Image Carousel */}
         <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 h-64 flex items-center justify-center border-b border-gray-200" data-testid="image-carousel">
-          <button 
-            onClick={handlePrevImage}
-            className="absolute left-4 p-3 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full shadow-lg transition-all active:scale-95"
-            aria-label="Previous image"
-            data-testid="prev-image-button"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          
-          <div className="text-center">
-            <span className="text-gray-400 text-lg font-medium">images</span>
-            <div className="mt-2 text-sm text-gray-500">{currentImageIndex + 1} / {totalImages}</div>
-          </div>
-          
-          <button 
-            onClick={handleNextImage}
-            className="absolute right-4 p-3 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full shadow-lg transition-all active:scale-95"
-            aria-label="Next image"
-            data-testid="next-image-button"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+          {totalImages > 0 ? (
+            <>
+              <img 
+                src={recipe.Images[currentImageIndex]} 
+                alt={recipe.Name}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                }}
+              />
+              {totalImages > 1 && (
+                <>
+                  <button 
+                    onClick={handlePrevImage}
+                    className="absolute left-4 p-3 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full shadow-lg transition-all active:scale-95"
+                    aria-label="Previous image"
+                    data-testid="prev-image-button"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm">
+                    {currentImageIndex + 1} / {totalImages}
+                  </div>
+                  
+                  <button 
+                    onClick={handleNextImage}
+                    className="absolute right-4 p-3 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full shadow-lg transition-all active:scale-95"
+                    aria-label="Next image"
+                    data-testid="next-image-button"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </>
+              )}
+            </>
+          ) : (
+            <div className="text-center">
+              <span className="text-gray-400 text-lg font-medium">No images available</span>
+            </div>
+          )}
         </div>
         
         {/* Time Info */}
@@ -176,54 +234,77 @@ const RecipeDetailPage = () => {
             <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-base font-medium text-gray-700">prep</span>
+            <span className="text-base font-medium text-gray-700">
+              prep: {parseDuration(recipe.PrepTime)}
+            </span>
           </div>
           <div className="flex items-center space-x-2">
             <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-base font-medium text-gray-700">total</span>
+            <span className="text-base font-medium text-gray-700">
+              total: {parseDuration(recipe.TotalTime)}
+            </span>
           </div>
         </div>
         
         {/* Description Area */}
         <div className="px-4 py-6 border-b border-gray-200" data-testid="description-area">
-          <h2 className="text-xl font-bold text-gray-800 mb-3">DESCRIPTION AREA</h2>
+          <h2 className="text-xl font-bold text-gray-800 mb-3">DESCRIPTION</h2>
           <p className="text-gray-600 leading-relaxed">
-            Placeholder description text will appear here when connected to the dataset.
+            {recipe.Description || 'No description available'}
           </p>
         </div>
         
         {/* Ingredients Area */}
         <div className="px-4 py-6 border-b border-gray-200" data-testid="ingredients-area">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">INGREDIENTS AREA</h2>
+          <h2 className="text-xl font-bold text-gray-800 mb-4">INGREDIENTS</h2>
           <div className="space-y-3">
-            {ingredients.map((ingredient, index) => (
-              <div 
-                key={index}
-                className="flex items-center justify-between py-2"
-                data-testid={`ingredient-${index}`}
-              >
-                <span className="text-lg font-medium text-gray-800">{ingredient.name}</span>
-                <span className="text-lg font-semibold text-gray-700">{ingredient.quantity}</span>
-              </div>
-            ))}
+            {ingredients.length > 0 ? (
+              ingredients.map((ingredient, index) => (
+                <div 
+                  key={index}
+                  className="flex items-center justify-between py-2"
+                  data-testid={`ingredient-${index}`}
+                >
+                  <span className="text-base font-medium text-gray-800 capitalize">
+                    {ingredient.name}
+                  </span>
+                  <span className="text-base font-semibold text-gray-700">
+                    {ingredient.quantity || '—'}
+                  </span>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">No ingredients listed</p>
+            )}
           </div>
         </div>
         
         {/* Instructions Area */}
         <div className="px-4 py-6 border-b border-gray-200" data-testid="instructions-area">
-          <h2 className="text-xl font-bold text-gray-800 mb-3">INSTRUCTIONS AREA</h2>
-          <p className="text-gray-600 leading-relaxed">
-            Placeholder instructions text will appear here when connected to the dataset.
-          </p>
+          <h2 className="text-xl font-bold text-gray-800 mb-4">INSTRUCTIONS</h2>
+          {instructions.length > 0 ? (
+            <ol className="space-y-4">
+              {instructions.map((step, index) => (
+                <li key={index} className="flex">
+                  <span className="text-accent font-bold mr-3 flex-shrink-0">{index + 1}.</span>
+                  <span className="text-gray-600 leading-relaxed">{step}</span>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <p className="text-gray-500">No instructions available</p>
+          )}
         </div>
         
         {/* Calories */}
         <div className="px-4 py-4 border-b border-gray-200" data-testid="calories-section">
           <div className="flex items-center justify-between">
             <span className="text-lg font-bold text-gray-800">CALORIES</span>
-            <span className="text-lg font-semibold text-gray-700">---</span>
+            <span className="text-lg font-semibold text-gray-700">
+              {formatCalories(recipe.Calories)} kcal
+            </span>
           </div>
         </div>
         
@@ -232,11 +313,19 @@ const RecipeDetailPage = () => {
           <div className="flex items-center justify-between">
             <span className="text-lg font-bold text-gray-800">RATING</span>
             <div className="flex items-center space-x-1">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <svg key={star} className="w-6 h-6 fill-current text-yellow-400" viewBox="0 0 24 24">
+              {[...Array(starRating.full)].map((_, i) => (
+                <svg key={`full-${i}`} className="w-6 h-6 fill-current text-yellow-400" viewBox="0 0 24 24">
                   <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                 </svg>
               ))}
+              {[...Array(starRating.empty)].map((_, i) => (
+                <svg key={`empty-${i}`} className="w-6 h-6 fill-current text-gray-300" viewBox="0 0 24 24">
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                </svg>
+              ))}
+              {recipe.AggregatedRating && (
+                <span className="ml-2 text-sm text-gray-600">({recipe.AggregatedRating.toFixed(1)})</span>
+              )}
             </div>
           </div>
         </div>
@@ -245,7 +334,9 @@ const RecipeDetailPage = () => {
         <div className="px-4 py-4 border-b border-gray-200" data-testid="review-count-section">
           <div className="flex items-center justify-between">
             <span className="text-lg font-bold text-gray-800">REVIEW COUNT</span>
-            <span className="text-lg font-semibold text-gray-700">---</span>
+            <span className="text-lg font-semibold text-gray-700">
+              {recipe.ReviewCount ? Math.round(recipe.ReviewCount) : 0} reviews
+            </span>
           </div>
         </div>
         
@@ -253,16 +344,69 @@ const RecipeDetailPage = () => {
         <div className="px-4 py-4 border-b border-gray-200" data-testid="servings-section">
           <div className="flex items-center justify-between">
             <span className="text-lg font-bold text-gray-800">SERVINGS</span>
-            <span className="text-lg font-semibold text-gray-700">---</span>
+            <span className="text-lg font-semibold text-gray-700">
+              {recipe.RecipeServings ? Math.round(recipe.RecipeServings) : 'N/A'}
+            </span>
           </div>
         </div>
         
-        {/* Everything Else Placeholder */}
+        {/* Everything Else - Additional Nutrition Info */}
         <div className="px-4 py-6 bg-gray-50" data-testid="everything-else-section">
-          <h2 className="text-xl font-bold text-gray-800 text-center mb-2">EVERYTHING ELSE</h2>
-          <p className="text-sm text-gray-500 text-center">
-            Additional recipe metadata will appear here when connected to the dataset
-          </p>
+          <h2 className="text-xl font-bold text-gray-800 text-center mb-4">NUTRITION FACTS</h2>
+          <div className="grid grid-cols-2 gap-4">
+            {recipe.FatContent && (
+              <div className="text-center">
+                <div className="text-sm text-gray-500">Fat</div>
+                <div className="text-base font-semibold text-gray-800">{recipe.FatContent.toFixed(1)}g</div>
+              </div>
+            )}
+            {recipe.ProteinContent && (
+              <div className="text-center">
+                <div className="text-sm text-gray-500">Protein</div>
+                <div className="text-base font-semibold text-gray-800">{recipe.ProteinContent.toFixed(1)}g</div>
+              </div>
+            )}
+            {recipe.CarbohydrateContent && (
+              <div className="text-center">
+                <div className="text-sm text-gray-500">Carbs</div>
+                <div className="text-base font-semibold text-gray-800">{recipe.CarbohydrateContent.toFixed(1)}g</div>
+              </div>
+            )}
+            {recipe.SugarContent && (
+              <div className="text-center">
+                <div className="text-sm text-gray-500">Sugar</div>
+                <div className="text-base font-semibold text-gray-800">{recipe.SugarContent.toFixed(1)}g</div>
+              </div>
+            )}
+            {recipe.FiberContent && (
+              <div className="text-center">
+                <div className="text-sm text-gray-500">Fiber</div>
+                <div className="text-base font-semibold text-gray-800">{recipe.FiberContent.toFixed(1)}g</div>
+              </div>
+            )}
+            {recipe.SodiumContent && (
+              <div className="text-center">
+                <div className="text-sm text-gray-500">Sodium</div>
+                <div className="text-base font-semibold text-gray-800">{recipe.SodiumContent.toFixed(1)}mg</div>
+              </div>
+            )}
+          </div>
+          
+          {recipe.Tags && recipe.Tags.length > 0 && (
+            <div className="mt-6">
+              <h3 className="text-sm font-bold text-gray-700 mb-2">TAGS</h3>
+              <div className="flex flex-wrap gap-2">
+                {recipe.Tags.map((tag, index) => (
+                  <span 
+                    key={index} 
+                    className="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-xs font-medium"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>
