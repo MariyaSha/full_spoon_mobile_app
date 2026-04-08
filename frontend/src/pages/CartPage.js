@@ -200,9 +200,18 @@ const CartPage = () => {
         // Convert map to array and format for display
         const ingredientList = Object.keys(ingredientMap).map((key, index) => {
           const ingredient = ingredientMap[key];
-          const displayQuantity = typeof ingredient.quantity === 'number' 
-            ? ingredient.quantity.toString()
-            : ingredient.quantity;
+          
+          // Format quantity with max 2 decimal places
+          let displayQuantity;
+          if (typeof ingredient.quantity === 'number') {
+            // Round to 2 decimal places and remove trailing zeros
+            displayQuantity = Math.round(ingredient.quantity * 100) / 100;
+            // Convert to string and remove unnecessary trailing zeros
+            displayQuantity = displayQuantity.toString().replace(/\.?0+$/, '');
+          } else {
+            displayQuantity = ingredient.quantity;
+          }
+          
           const displayMeasurement = ingredient.measurement || '';
           
           return {
