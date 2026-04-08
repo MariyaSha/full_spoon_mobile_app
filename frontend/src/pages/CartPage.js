@@ -50,8 +50,26 @@ const CartPage = () => {
       return fractionMap[str];
     }
     
-    // Check for mixed numbers like "1 ½" or "2¼"
-    const mixedMatch = str.match(/^(\d+)\s*(¼|½|¾|⅐|⅑|⅒|⅓|⅔|⅕|⅖|⅗|⅘|⅙|⅚|⅛|⅜|⅝|⅞)?$/);
+    // Handle fractions with fraction slash (e.g., "1⁄2", "3⁄4")
+    // U+2044 is the fraction slash character
+    const fractionSlashMatch = str.match(/^(\d+)[\u2044\/](\d+)$/);
+    if (fractionSlashMatch) {
+      const numerator = parseInt(fractionSlashMatch[1], 10);
+      const denominator = parseInt(fractionSlashMatch[2], 10);
+      return numerator / denominator;
+    }
+    
+    // Handle mixed numbers with fraction slash (e.g., "1 1⁄2", "2 3⁄4")
+    const mixedFractionSlash = str.match(/^(\d+)\s+(\d+)[\u2044\/](\d+)$/);
+    if (mixedFractionSlash) {
+      const whole = parseInt(mixedFractionSlash[1], 10);
+      const numerator = parseInt(mixedFractionSlash[2], 10);
+      const denominator = parseInt(mixedFractionSlash[3], 10);
+      return whole + (numerator / denominator);
+    }
+    
+    // Check for mixed numbers with Unicode fractions (e.g., "1½", "2¼")
+    const mixedMatch = str.match(/^(\d+)\s*(¼|½|¾|⅐|⅑|⅒|⅓|⅔|⅕|⅖|⅗|⅘|⅙|⅚|⅛|⅜|⅝|⅞)$/);
     if (mixedMatch) {
       const whole = parseInt(mixedMatch[1], 10);
       const fraction = mixedMatch[2] ? fractionMap[mixedMatch[2]] : 0;
