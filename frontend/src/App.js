@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-route
 import { LovedRecipesProvider } from './context/LovedRecipesContext';
 import { CartProvider } from './context/CartContext';
 import { FilterProvider } from './context/FilterContext';
+import { DarkModeProvider } from './context/DarkModeContext';
 import TopBar from './components/TopBar';
 import MenuDrawer from './components/MenuDrawer';
 import FilterPanel from './components/FilterPanel';
@@ -63,7 +64,8 @@ function App() {
     <CartProvider>
       <LovedRecipesProvider>
         <FilterProvider>
-          <Router>
+          <DarkModeProvider>
+            <Router>
           <Routes>
             <Route path="/" element={<HomeLayout />} />
             <Route path="/all-recipes" element={<CategoryPage category="all" title="ALL RECIPES" />} />
@@ -80,8 +82,10 @@ function App() {
             <Route path="/recipe/:id" element={<RecipeDetailPage />} />
           </Routes>
         </Router>
-      </FilterProvider>
-    </LovedRecipesProvider>
+      </DarkModeProvider>
+    </FilterProvider>
+  </LovedRecipesProvider>
+
   </CartProvider>
   );
 }
