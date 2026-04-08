@@ -16,6 +16,58 @@ const CartPage = () => {
   
   const { cartRecipeIds } = useCart();
 
+  // Helper function to convert Unicode fractions and mixed numbers to decimals
+  const parseQuantity = (quantityStr) => {
+    if (!quantityStr) return 0;
+    
+    // Convert to string in case it's not
+    const str = String(quantityStr).trim();
+    
+    // Unicode fraction map
+    const fractionMap = {
+      '¼': 0.25,
+      '½': 0.5,
+      '¾': 0.75,
+      '⅐': 0.142857,
+      '⅑': 0.111111,
+      '⅒': 0.1,
+      '⅓': 0.333333,
+      '⅔': 0.666667,
+      '⅕': 0.2,
+      '⅖': 0.4,
+      '⅗': 0.6,
+      '⅘': 0.8,
+      '⅙': 0.166667,
+      '⅚': 0.833333,
+      '⅛': 0.125,
+      '⅜': 0.375,
+      '⅝': 0.625,
+      '⅞': 0.875
+    };
+    
+    // Check if it's a pure Unicode fraction
+    if (fractionMap[str]) {
+      return fractionMap[str];
+    }
+    
+    // Check for mixed numbers like "1 ½" or "2¼"
+    const mixedMatch = str.match(/^(\d+)\s*(¼|½|¾|⅐|⅑|⅒|⅓|⅔|⅕|⅖|⅗|⅘|⅙|⅚|⅛|⅜|⅝|⅞)?$/);
+    if (mixedMatch) {
+      const whole = parseInt(mixedMatch[1], 10);
+      const fraction = mixedMatch[2] ? fractionMap[mixedMatch[2]] : 0;
+      return whole + fraction;
+    }
+    
+    // Try standard parseFloat
+    const parsed = parseFloat(str);
+    if (!isNaN(parsed)) {
+      return parsed;
+    }
+    
+    // Return original string if cannot parse
+    return str;
+  };
+
   // Helper function to normalize measurement units (handle plural/singular)
   const normalizeMeasurement = (measurement) => {
     if (!measurement) return '';
@@ -96,10 +148,8 @@ const CartPage = () => {
             // Normalize measurement (lowercase, trim, plurals to singular)
             const normalizedMeasurement = normalizeMeasurement(ingredient.measurement);
             
-            // Parse quantity (convert to number if possible)
-            const quantity = ingredient.quantity 
-              ? parseFloat(ingredient.quantity) || ingredient.quantity
-              : 0;
+            // Parse quantity using our Unicode fraction converter
+            const quantity = parseQuantity(ingredient.quantity);
             
             // Create unique key: name + measurement unit
             // This ensures we only combine ingredients with matching name AND unit
