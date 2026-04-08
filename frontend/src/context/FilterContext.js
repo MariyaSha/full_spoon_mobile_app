@@ -84,12 +84,12 @@ export const FilterProvider = ({ children }) => {
     }
 
     return recipes.filter(recipe => {
-      // Check all selected filters - ALL must match (AND logic)
+      // Check all selected filters - ALL must match (strict AND logic)
       for (const [sectionId, filterIds] of Object.entries(selectedFilters)) {
         if (filterIds.length === 0) continue; // Skip if no filters in this section
 
-        // At least ONE filter in this section must match (OR logic within section)
-        const sectionMatches = filterIds.some(filterId => {
+        // ALL filters in this section must match (AND logic)
+        const allFiltersMatch = filterIds.every(filterId => {
           const filterDef = filterDefinitions[sectionId][filterId];
           if (!filterDef) return false;
 
@@ -107,13 +107,13 @@ export const FilterProvider = ({ children }) => {
           return false;
         });
 
-        // If this section has filters selected but none matched, exclude recipe
-        if (!sectionMatches) {
+        // If any filter in this section didn't match, exclude recipe
+        if (!allFiltersMatch) {
           return false;
         }
       }
 
-      return true; // All sections matched
+      return true; // All filters in all sections matched
     });
   };
 
