@@ -1,21 +1,135 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopBar from '../components/TopBar';
 import MenuDrawer from '../components/MenuDrawer';
 import FilterPanel from '../components/FilterPanel';
+import { useCart } from '../context/CartContext';
+import { loadRecipes, formatIngredients } from '../services/recipeService';
 
 const CartPage = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [checkedItems, setCheckedItems] = useState({
-    flour: false,
-    chicken: false,
-    milk: false,
-    potatoe: false,
-    onion: false,
-    sugar: false
-  });
+  const [aggregatedIngredients, setAggregatedIngredients] = useState([]);
+  const [checkedItems, setCheckedItems] = useState({});
+  const [loading, setLoading] = useState(true);
+  
+  const { cartRecipeIds } = useCart();
+
+  // Aggregate ingredients from all cart recipes
+  useEffect(() => {
+    const aggregateIngredients = async () => {
+      try {
+        setLoading(true);
+        
+        if (cartRecipeIds.length === 0) {
+          setAggregatedIngredients([]);
+          setCheckedItems({});
+          setLoading(false);
+          return;
+        }
+        
+        // Load all recipes
+        const allRecipes = await loadRecipes();
+        
+        // Filter to only cart recipes
+        const cartRecipes = allRecipes.filter(recipe => 
+          cartRecipeIds.includes(recipe.RecipeId)
+        );
+        
+        // Extract ingredients from all recipes
+        const ingredientMap = {};
+        
+        cartRecipes.forEach(recipe => {
+          const ingredients = formatIngredients(
+            recipe.RecipeIngredientQuantities,
+            recipe.RecipeIngredientMeasurements,
+            recipe.RecipeIngredientParts,
+            recipe.RecipeIngredientInstructions
+          );
+          
+          ingredients.forEach(ingredient => {
+            // Skip if no name
+            if (!ingredient.name) return;
+            
+            // Normalize ingredient name (lowercase, trim)
+            const normalizedName = ingredient.name.toLowerCase().trim();
+            
+            // Normalize measurement (lowercase, trim, handle "None")
+            const normalizedMeasurement = ingredient.measurement 
+              ? ingredient.measurement.toLowerCase().trim() 
+              : '';
+            
+            // Parse quantity (convert to number if possible)
+            const quantity = ingredient.quantity 
+              ? parseFloat(ingredient.quantity) || ingredient.quantity
+              : 0;
+            
+            // Create unique key: name + measurement unit
+            // This ensures we only combine ingredients with matching name AND unit
+            const key = `${normalizedName}|${normalizedMeasurement}`;
+            
+            if (ingredientMap[key]) {
+              // Ingredient with same name and unit exists - combine quantities
+              if (typeof quantity === 'number' && typeof ingredientMap[key].quantity === 'number') {
+                ingredientMap[key].quantity += quantity;
+              } else {
+                // If we can't parse as numbers, keep as separate (shouldn't happen often)
+                const newKey = `${key}|${Date.now()}`;
+                ingredientMap[newKey] = {
+                  name: ingredient.name,
+                  quantity: ingredient.quantity,
+                  measurement: ingredient.measurement
+                };
+              }
+            } else {
+              // New ingredient
+              ingredientMap[key] = {
+                name: ingredient.name,
+                quantity: quantity,
+                measurement: normalizedMeasurement
+              };
+            }
+          });
+        });
+        
+        // Convert map to array and format for display
+        const ingredientList = Object.keys(ingredientMap).map((key, index) => {
+          const ingredient = ingredientMap[key];
+          const displayQuantity = typeof ingredient.quantity === 'number' 
+            ? ingredient.quantity.toString()
+            : ingredient.quantity;
+          const displayMeasurement = ingredient.measurement || '';
+          
+          return {
+            id: `ingredient-${index}`,
+            name: ingredient.name.toUpperCase(),
+            quantity: `${displayQuantity}${displayMeasurement ? ' ' + displayMeasurement.toUpperCase() : ''}`.trim(),
+            testId: `cart-item-${index}`
+          };
+        });
+        
+        // Sort alphabetically by name
+        ingredientList.sort((a, b) => a.name.localeCompare(b.name));
+        
+        setAggregatedIngredients(ingredientList);
+        
+        // Initialize checked state for all ingredients
+        const initialCheckedState = {};
+        ingredientList.forEach(item => {
+          initialCheckedState[item.id] = false;
+        });
+        setCheckedItems(initialCheckedState);
+        
+      } catch (error) {
+        console.error('Error aggregating ingredients:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    aggregateIngredients();
+  }, [cartRecipeIds]);
 
   const handleMenuToggle = () => {
     setIsFilterOpen(false);
@@ -33,15 +147,6 @@ const CartPage = () => {
       [item]: !prev[item]
     }));
   };
-
-  const cartItems = [
-    { id: 'flour', name: 'FLOUR', quantity: '1 KG', testId: 'cart-item-flour' },
-    { id: 'chicken', name: 'CHICKEN', quantity: '500 G', testId: 'cart-item-chicken' },
-    { id: 'milk', name: 'MILK', quantity: '2 L', testId: 'cart-item-milk' },
-    { id: 'potatoe', name: 'POTATOE', quantity: '400 G', testId: 'cart-item-potatoe' },
-    { id: 'onion', name: 'ONION', quantity: '300 G', testId: 'cart-item-onion' },
-    { id: 'sugar', name: 'SUGAR', quantity: '150 G', testId: 'cart-item-sugar' }
-  ];
 
   return (
     <div className="min-h-screen bg-white" data-testid="cart-page">
@@ -84,27 +189,47 @@ const CartPage = () => {
       
       <main className="p-4 pb-8">
         {/* Shopping Checklist */}
-        <div className="space-y-3 mb-6">
-          {cartItems.map((item) => (
-            <label
-              key={item.id}
-              className="flex items-center justify-between p-4 bg-white border-2 border-gray-200 rounded-xl hover:border-gray-300 cursor-pointer transition-colors"
-              data-testid={`${item.testId}-label`}
+        {loading ? (
+          <div className="text-center py-8 text-gray-500">Loading ingredients...</div>
+        ) : aggregatedIngredients.length === 0 ? (
+          <div className="text-center py-12">
+            <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <p className="text-gray-500 text-lg mb-2">Your cart is empty</p>
+            <p className="text-gray-400 text-sm mb-6">
+              Add recipes to your cart to generate a shopping list
+            </p>
+            <button
+              onClick={() => navigate('/')}
+              className="bg-accent text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors"
             >
-              <div className="flex items-center flex-1">
-                <input
-                  type="checkbox"
-                  checked={checkedItems[item.id]}
-                  onChange={() => handleCheckboxChange(item.id)}
-                  className="w-6 h-6 text-accent border-gray-300 rounded focus:ring-accent focus:ring-2 cursor-pointer"
-                  data-testid={item.testId}
-                />
-                <span className="ml-4 text-lg font-medium text-gray-800">{item.name}</span>
-              </div>
-              <span className="text-lg font-semibold text-gray-700">{item.quantity}</span>
-            </label>
-          ))}
-        </div>
+              Browse Recipes
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-3 mb-6">
+            {aggregatedIngredients.map((item) => (
+              <label
+                key={item.id}
+                className="flex items-center justify-between p-4 bg-white border-2 border-gray-200 rounded-xl hover:border-gray-300 cursor-pointer transition-colors"
+                data-testid={`${item.testId}-label`}
+              >
+                <div className="flex items-center flex-1">
+                  <input
+                    type="checkbox"
+                    checked={checkedItems[item.id] || false}
+                    onChange={() => handleCheckboxChange(item.id)}
+                    className="w-6 h-6 text-accent border-gray-300 rounded focus:ring-accent focus:ring-2 cursor-pointer"
+                    data-testid={item.testId}
+                  />
+                  <span className="ml-4 text-lg font-medium text-gray-800">{item.name}</span>
+                </div>
+                <span className="text-lg font-semibold text-gray-700">{item.quantity}</span>
+              </label>
+            ))}
+          </div>
+        )}
         
         {/* Cart Recipes Section - Tappable */}
         <button
