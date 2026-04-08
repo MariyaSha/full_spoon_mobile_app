@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import MenuDrawer from '../components/MenuDrawer';
 import FilterPanel from '../components/FilterPanel';
 import { useLovedRecipes } from '../context/LovedRecipesContext';
+import { useCart } from '../context/CartContext';
 import { 
   getRecipeById, 
   parseDuration, 
@@ -22,6 +23,7 @@ const RecipeDetailPage = () => {
   const [loading, setLoading] = useState(true);
   
   const { isRecipeLoved, toggleLovedRecipe } = useLovedRecipes();
+  const { isInCart, toggleCart } = useCart();
 
   useEffect(() => {
     const loadRecipe = async () => {
@@ -63,6 +65,12 @@ const RecipeDetailPage = () => {
       toggleLovedRecipe(recipe.RecipeId);
     }
   };
+  
+  const handleToggleCart = () => {
+    if (recipe) {
+      toggleCart(recipe.RecipeId);
+    }
+  };
 
   if (loading) {
     return (
@@ -90,6 +98,7 @@ const RecipeDetailPage = () => {
   const totalImages = recipe.Images ? recipe.Images.length : 0;
   const starRating = getStarRating(recipe.AggregatedRating);
   const isLoved = isRecipeLoved(recipe.RecipeId);
+  const inCart = isInCart(recipe.RecipeId);
 
   return (
     <div className="min-h-screen bg-white" data-testid="recipe-detail-page">
@@ -116,12 +125,12 @@ const RecipeDetailPage = () => {
             
             {/* Cart Icon */}
             <button 
-              onClick={() => navigate('/cart')}
+              onClick={handleToggleCart}
               className="p-2 hover:bg-gray-100 rounded-full transition-colors active:scale-95 relative"
-              aria-label="Shopping cart"
+              aria-label={inCart ? "Remove from cart" : "Add to cart"}
               data-testid="cart-icon-button"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className={`w-6 h-6 transition-colors ${inCart ? 'fill-current text-accent' : 'stroke-current text-gray-600'}`} fill={inCart ? "currentColor" : "none"} stroke={inCart ? "none" : "currentColor"} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </button>
@@ -145,12 +154,12 @@ const RecipeDetailPage = () => {
             
             {/* Cart Icon (duplicate for second row) */}
             <button 
-              onClick={() => navigate('/cart')}
+              onClick={handleToggleCart}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors active:scale-95"
-              aria-label="Add to cart"
+              aria-label={inCart ? "Remove from cart" : "Add to cart"}
               data-testid="add-to-cart-button"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className={`w-6 h-6 transition-colors ${inCart ? 'fill-current text-accent' : 'stroke-current text-gray-600'}`} fill={inCart ? "currentColor" : "none"} stroke={inCart ? "none" : "currentColor"} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </button>
