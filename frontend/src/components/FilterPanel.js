@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
+import { useFilters } from '../context/FilterContext';
 
 const FilterPanel = ({ isOpen }) => {
   const [expandedSections, setExpandedSections] = useState([]);
-  const [selectedFilters, setSelectedFilters] = useState({
-    time: [],
-    nutrition: [],
-    dishType: [],
-    cookingMethod: []
-  });
+  const { selectedFilters, toggleFilter, clearAllFilters, getTotalSelectedCount } = useFilters();
 
   // Filter sections with options derived from dataset analysis
   const filterSections = [
@@ -88,28 +84,6 @@ const FilterPanel = ({ isOpen }) => {
         ? prev.filter(id => id !== sectionId)
         : [...prev, sectionId]
     );
-  };
-
-  const toggleFilter = (sectionId, filterId) => {
-    setSelectedFilters(prev => ({
-      ...prev,
-      [sectionId]: prev[sectionId].includes(filterId)
-        ? prev[sectionId].filter(id => id !== filterId)
-        : [...prev[sectionId], filterId]
-    }));
-  };
-
-  const clearAllFilters = () => {
-    setSelectedFilters({
-      time: [],
-      nutrition: [],
-      dishType: [],
-      cookingMethod: []
-    });
-  };
-
-  const getTotalSelectedCount = () => {
-    return Object.values(selectedFilters).reduce((sum, arr) => sum + arr.length, 0);
   };
 
   return (

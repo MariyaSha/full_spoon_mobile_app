@@ -5,20 +5,25 @@ import MenuDrawer from '../components/MenuDrawer';
 import FilterPanel from '../components/FilterPanel';
 import RecipeCard from '../components/RecipeCard';
 import { getRecipesByCategory } from '../services/recipeService';
+import { useFilters } from '../context/FilterContext';
 
 const CategoryPage = ({ category, title }) => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [recipes, setRecipes] = useState([]);
+  const [baseRecipes, setBaseRecipes] = useState([]);
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  const { applyFilters } = useFilters();
 
+  // Load base recipes for the category
   useEffect(() => {
     const loadRecipes = async () => {
       try {
         setLoading(true);
         const categoryRecipes = await getRecipesByCategory(category);
-        setRecipes(categoryRecipes);
+        setBaseRecipes(categoryRecipes);
       } catch (error) {
         console.error(`Error loading ${category} recipes:`, error);
       } finally {
@@ -28,6 +33,12 @@ const CategoryPage = ({ category, title }) => {
     
     loadRecipes();
   }, [category]);
+
+  // Apply filters whenever base recipes or filters change
+  useEffect(() => {
+    const filtered = applyFilters(baseRecipes);
+    setFilteredRecipes(filtered);
+  }, [baseRecipes, applyFilters]);
 
   const handleMenuToggle = () => {
     setIsFilterOpen(false);
@@ -71,10 +82,10 @@ const CategoryPage = ({ category, title }) => {
         ) : (
           <>
             <div className="mb-4 text-sm text-gray-600">
-              {recipes.length} recipes found
+              {filteredRecipes.length} recipes found
             </div>
             <div className="space-y-4">
-              {recipes.slice(0, 50).map((recipe) => (
+              {filteredRecipes.slice(0, 50).map((recipe) => (
                 <RecipeCard
                   key={recipe.RecipeId}
                   recipeId={recipe.RecipeId}
