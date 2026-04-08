@@ -41,7 +41,7 @@ function HomeLayout() {
   };
 
   return (
-    <div className="App min-h-screen bg-white" data-testid="app-container">
+    <div className="App min-h-screen bg-white dark:bg-gray-900" data-testid="app-container">
       <TopBar 
         onMenuToggle={handleMenuToggle}
         onFilterToggle={handleFilterToggle}
