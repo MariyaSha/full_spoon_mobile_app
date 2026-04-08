@@ -1,12 +1,20 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const MenuDrawer = ({ isOpen }) => {
+  const navigate = useNavigate();
+
   const menuItems = [
-    { label: 'Categories', testId: 'menu-categories' },
-    { label: 'Loved Recipes', testId: 'menu-loved-recipes' },
-    { label: 'Cart', testId: 'menu-cart' },
-    { label: 'Saved Carts', testId: 'menu-saved-carts' }
+    { label: 'Main Categories', path: '/', testId: 'menu-main-categories' },
+    { label: 'Loved Recipes', path: '/loved-recipes', testId: 'menu-loved-recipes' },
+    { label: 'Cart Ingredients', path: '/cart', testId: 'menu-cart-ingredients' },
+    { label: 'Cart Recipes', path: '/cart-recipes', testId: 'menu-cart-recipes' },
+    { label: 'Saved Carts', path: '/saved-carts', testId: 'menu-saved-carts' }
   ];
+
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
 
   return (
     <div 
@@ -19,6 +27,7 @@ const MenuDrawer = ({ isOpen }) => {
         {menuItems.map((item, index) => (
           <button
             key={index}
+            onClick={() => handleNavigation(item.path)}
             className="w-full text-left px-6 py-4 text-base font-medium text-gray-800 hover:bg-gray-50 active:bg-gray-100 transition-colors border-b border-gray-100 last:border-b-0"
             data-testid={item.testId}
           >
