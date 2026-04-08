@@ -4,7 +4,7 @@ import TopBar from './components/TopBar';
 import MenuDrawer from './components/MenuDrawer';
 import FilterPanel from './components/FilterPanel';
 import Homepage from './components/Homepage';
-import QuickRecipesPage from './pages/QuickRecipesPage';
+import CategoryPage from './pages/CategoryPage';
 import LovedRecipesPage from './pages/LovedRecipesPage';
 import CartPage from './pages/CartPage';
 import CartRecipesPage from './pages/CartRecipesPage';
@@ -60,7 +60,12 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomeLayout />} />
-        <Route path="/quick-recipes" element={<QuickRecipesPage />} />
+        <Route path="/all-recipes" element={<CategoryPage category="all" title="ALL RECIPES" />} />
+        <Route path="/quick-recipes" element={<CategoryPage category="quick" title="QUICK RECIPES" />} />
+        <Route path="/low-calorie" element={<CategoryPage category="low_calorie" title="LOW CALORIE" />} />
+        <Route path="/no-pork" element={<CategoryPage category="no_pork" title="NO PORK" />} />
+        <Route path="/vegetarian" element={<CategoryPage category="vegetarian" title="VEGETARIAN" />} />
+        <Route path="/dairy-free" element={<CategoryPage category="dairy_free" title="DAIRY FREE" />} />
         <Route path="/loved-recipes" element={<LovedRecipesPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/cart-recipes" element={<CartRecipesPage />} />
