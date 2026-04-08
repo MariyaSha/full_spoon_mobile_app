@@ -268,7 +268,7 @@ const CartPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white" data-testid="cart-page">
+    <div className="min-h-screen bg-white dark:bg-gray-900" data-testid="cart-page">
       <TopBar 
         onMenuToggle={handleMenuToggle}
         onFilterToggle={handleFilterToggle}
@@ -280,7 +280,7 @@ const CartPage = () => {
       <FilterPanel isOpen={isFilterOpen} />
       
       {/* Action Icons Row */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700 px-4 py-3 flex items-center space-x-4">
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center space-x-4">
         {/* Save Icon */}
         <button 
           onClick={() => navigate('/save-cart')}
@@ -288,19 +288,19 @@ const CartPage = () => {
           aria-label="Save cart"
           data-testid="save-cart-button"
         >
-          <svg className="w-6 h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 text-gray-700 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
           </svg>
         </button>
         
-        {/* Refresh Icon */}
+        {/* Saved Carts Icon */}
         <button 
           onClick={() => navigate('/saved-carts')}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors active:scale-95"
+          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors active:scale-95"
           aria-label="View saved carts"
           data-testid="refresh-cart-button"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 text-gray-700 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
         </button>
@@ -324,11 +324,11 @@ const CartPage = () => {
           <div className="text-center py-8 text-gray-500 dark:text-gray-400">Loading ingredients...</div>
         ) : aggregatedIngredients.length === 0 ? (
           <div className="text-center py-12">
-            <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-16 h-16 mx-auto mb-4 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            <p className="text-gray-500 text-lg mb-2">Your cart is empty</p>
-            <p className="text-gray-400 text-sm mb-6">
+            <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">Your cart is empty</p>
+            <p className="text-gray-400 dark:text-gray-500 text-sm mb-6">
               Add recipes to your cart to generate a shopping list
             </p>
             <button
@@ -356,7 +356,7 @@ const CartPage = () => {
                   />
                   <span className="ml-4 text-lg font-medium text-gray-800 dark:text-gray-100">{item.name}</span>
                 </div>
-                <span className="text-lg font-semibold text-gray-700">{item.quantity}</span>
+                <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">{item.quantity}</span>
               </label>
             ))}
           </div>
@@ -365,11 +365,11 @@ const CartPage = () => {
         {/* Cart Recipes Section - Tappable */}
         <button
           onClick={() => navigate('/cart-recipes')}
-          className="w-full mt-8 p-6 bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-300 rounded-xl hover:border-accent hover:shadow-lg active:scale-98 transition-all duration-200"
+          className="w-full mt-8 p-6 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-xl hover:border-accent hover:shadow-lg active:scale-98 transition-all duration-200"
           data-testid="cart-recipes-button"
         >
           <div className="flex items-center justify-center space-x-3">
-            <svg className="w-7 h-7 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-7 h-7 text-gray-700 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
             <span className="text-xl font-bold text-gray-800 dark:text-gray-100">CART RECIPES</span>
@@ -380,15 +380,15 @@ const CartPage = () => {
       {/* Empty Cart Confirmation Modal */}
       {showEmptyConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowEmptyConfirm(false)}>
-          <div className="bg-white rounded-xl p-6 max-w-md mx-4 shadow-xl" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-xl font-bold text-gray-900 mb-3">Empty Cart?</h2>
-            <p className="text-gray-600 mb-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md mx-4 shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Empty Cart?</h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
               Are you sure you want to empty your cart? This will remove all recipes and ingredients.
             </p>
             <div className="flex space-x-3">
               <button
                 onClick={() => setShowEmptyConfirm(false)}
-                className="flex-1 px-4 py-3 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+                className="flex-1 px-4 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
               >
                 Cancel
               </button>

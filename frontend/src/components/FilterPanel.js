@@ -88,7 +88,7 @@ const FilterPanel = ({ isOpen }) => {
 
   return (
     <div 
-      className={`overflow-hidden transition-all duration-300 ease-in-out bg-white border-b border-gray-200 dark:border-gray-700 ${
+      className={`overflow-hidden transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 ${
         isOpen ? 'max-h-[600px] opacity-100 overflow-y-auto' : 'max-h-0 opacity-0'
       }`}
       data-testid="filter-panel"
@@ -97,7 +97,7 @@ const FilterPanel = ({ isOpen }) => {
         {/* Clear Filters Button */}
         <button
           onClick={clearAllFilters}
-          className="flex items-center justify-between px-6 py-3 w-full hover:bg-gray-50 dark:bg-gray-900 transition-colors border-b-2 border-gray-300"
+          className="flex items-center justify-between px-6 py-3 w-full hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b-2 border-gray-300 dark:border-gray-600"
           data-testid="clear-filters-button"
         >
           <div className="flex items-center space-x-3">
@@ -153,7 +153,7 @@ const FilterPanel = ({ isOpen }) => {
                   {section.options.map((option) => (
                     <label
                       key={option.id}
-                      className="flex items-center px-10 py-2 hover:bg-gray-100 cursor-pointer transition-colors"
+                      className="flex items-center px-10 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors"
                       data-testid={`filter-${section.id}-${option.id}-label`}
                     >
                       <input

@@ -76,15 +76,15 @@ const SaveCartPage = () => {
         <div className="flex items-center mb-8">
           <button 
             onClick={() => navigate('/cart')}
-            className="mr-3 p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="mr-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
             aria-label="Back to cart"
             data-testid="back-button"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-gray-700 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 mr-2 text-gray-700 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
           </svg>
           <h1 className="text-2xl font-bold text-primary dark:text-white">SAVE CART</h1>
@@ -95,7 +95,7 @@ const SaveCartPage = () => {
           <div>
             <label 
               htmlFor="cart-name" 
-              className="block text-lg font-medium text-gray-700 mb-3"
+              className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-3"
               data-testid="cart-name-label"
             >
               choose cart name
@@ -106,7 +106,7 @@ const SaveCartPage = () => {
               value={cartName}
               onChange={(e) => setCartName(e.target.value)}
               placeholder="game night"
-              className="w-full px-4 py-4 text-lg border-2 border-gray-300 rounded-xl focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent transition-colors"
+              className="w-full px-4 py-4 text-lg border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent transition-colors"
               data-testid="cart-name-input"
             />
           </div>

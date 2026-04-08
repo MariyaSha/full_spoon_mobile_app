@@ -62,11 +62,11 @@ const LovedRecipesPage = () => {
         <div className="flex items-center mb-6">
           <button 
             onClick={() => navigate('/')}
-            className="mr-3 p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="mr-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
             aria-label="Back to home"
             data-testid="back-button"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-gray-700 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
@@ -80,11 +80,11 @@ const LovedRecipesPage = () => {
           <div className="text-center py-8 text-gray-500 dark:text-gray-400">Loading loved recipes...</div>
         ) : lovedRecipes.length === 0 ? (
           <div className="text-center py-12">
-            <svg className="w-16 h-16 mx-auto mb-4 fill-current text-gray-300" viewBox="0 0 24 24">
+            <svg className="w-16 h-16 mx-auto mb-4 fill-current text-gray-300 dark:text-gray-600" viewBox="0 0 24 24">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
             </svg>
-            <p className="text-gray-500 text-lg mb-2">No loved recipes yet</p>
-            <p className="text-gray-400 text-sm mb-6">
+            <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No loved recipes yet</p>
+            <p className="text-gray-400 dark:text-gray-500 text-sm mb-6">
               Browse recipes and tap the heart icon to save your favorites here
             </p>
             <button
@@ -96,7 +96,7 @@ const LovedRecipesPage = () => {
           </div>
         ) : (
           <>
-            <div className="mb-4 text-sm text-gray-600">
+            <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
               {lovedRecipes.length} {lovedRecipes.length === 1 ? 'recipe' : 'recipes'}
             </div>
             <div className="space-y-4">

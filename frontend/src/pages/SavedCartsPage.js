@@ -62,15 +62,15 @@ const SavedCartsPage = () => {
         <div className="flex items-center mb-6">
           <button 
             onClick={() => navigate('/cart')}
-            className="mr-3 p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="mr-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
             aria-label="Back to cart"
             data-testid="back-button"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-gray-700 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 mr-2 text-gray-700 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
           <h1 className="text-2xl font-bold text-primary dark:text-white">SAVED CARTS</h1>
@@ -79,11 +79,11 @@ const SavedCartsPage = () => {
         {/* Saved Carts List */}
         {savedCarts.length === 0 ? (
           <div className="text-center py-12">
-            <svg className="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-16 h-16 mx-auto mb-4 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
             </svg>
-            <p className="text-gray-500 text-lg mb-2">No saved carts yet</p>
-            <p className="text-gray-400 text-sm mb-6">
+            <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No saved carts yet</p>
+            <p className="text-gray-400 dark:text-gray-500 text-sm mb-6">
               Save your cart from the cart page to access it later
             </p>
             <button
@@ -99,11 +99,11 @@ const SavedCartsPage = () => {
               <button
                 key={cart.id}
                 onClick={() => handleLoadCart(cart)}
-                className="w-full flex items-center justify-between p-4 bg-white border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-accent hover:shadow-lg active:scale-98 transition-all duration-200"
+                className="w-full flex items-center justify-between p-4 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-accent hover:shadow-lg active:scale-98 transition-all duration-200"
                 data-testid={`saved-cart-${index}`}
               >
                 <span className="text-lg font-medium text-gray-800 dark:text-gray-100">{cart.name}</span>
-                <span className="text-lg font-semibold text-gray-600">{cart.displayDate}</span>
+                <span className="text-lg font-semibold text-gray-600 dark:text-gray-300">{cart.displayDate}</span>
               </button>
             ))}
           </div>

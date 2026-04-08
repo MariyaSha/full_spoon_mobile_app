@@ -60,11 +60,11 @@ const CartRecipesPage = () => {
         {/* Save Cart Icon */}
         <button 
           onClick={() => navigate('/save-cart')}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors active:scale-95"
+          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors active:scale-95"
           aria-label="Save cart"
           data-testid="save-cart-button"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 text-gray-700 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
           </svg>
         </button>
@@ -72,11 +72,11 @@ const CartRecipesPage = () => {
         {/* Saved Carts Icon */}
         <button 
           onClick={() => navigate('/saved-carts')}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors active:scale-95"
+          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors active:scale-95"
           aria-label="View saved carts"
           data-testid="saved-carts-button"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 text-gray-700 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
         </button>
@@ -97,29 +97,29 @@ const CartRecipesPage = () => {
         <div className="flex items-center mb-6">
           <button 
             onClick={() => navigate('/cart')}
-            className="mr-3 p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="mr-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
             aria-label="Back to cart"
             data-testid="back-button"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-gray-700 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 mr-2 text-gray-700 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
-          <h1 className="text-2xl font-bold text-primary">CART RECIPES</h1>
+          <h1 className="text-2xl font-bold text-primary dark:text-white">CART RECIPES</h1>
         </div>
         
         {loading ? (
           <div className="text-center py-8 text-gray-500 dark:text-gray-400">Loading cart recipes...</div>
         ) : cartRecipes.length === 0 ? (
           <div className="text-center py-12">
-            <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-16 h-16 mx-auto mb-4 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            <p className="text-gray-500 text-lg mb-2">Your cart is empty</p>
-            <p className="text-gray-400 text-sm mb-6">
+            <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">Your cart is empty</p>
+            <p className="text-gray-400 dark:text-gray-500 text-sm mb-6">
               Browse recipes and tap the cart icon to add them here
             </p>
             <button
@@ -152,15 +152,15 @@ const CartRecipesPage = () => {
       {/* Empty Cart Confirmation Modal */}
       {showEmptyConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowEmptyConfirm(false)}>
-          <div className="bg-white rounded-xl p-6 max-w-md mx-4 shadow-xl" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-xl font-bold text-gray-900 mb-3">Empty Cart?</h2>
-            <p className="text-gray-600 mb-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md mx-4 shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Empty Cart?</h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
               Are you sure you want to empty your cart? This will remove all recipes and ingredients.
             </p>
             <div className="flex space-x-3">
               <button
                 onClick={() => setShowEmptyConfirm(false)}
-                className="flex-1 px-4 py-3 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+                className="flex-1 px-4 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
               >
                 Cancel
               </button>
