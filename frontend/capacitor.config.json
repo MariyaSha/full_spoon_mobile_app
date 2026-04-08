@@ -1,0 +1,9 @@
+{
+  "appId": "com.fullspoon.app",
+  "appName": "Full Spoon",
+  "webDir": "build",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  }
+}

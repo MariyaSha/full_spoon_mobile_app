@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@capacitor/android": "^6.1.0",
+    "@capacitor/cli": "^6.1.0",
+    "@capacitor/core": "^6.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.14.0",
@@ -12,7 +15,12 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build:mobile": "yarn build && npx cap sync android",
+    "android:open": "npx cap open android",
+    "android:run": "npx cap run android",
+    "android:build": "cd android && ./gradlew assembleDebug && cd ..",
+    "android:build:release": "cd android && ./gradlew assembleRelease && cd .."
   },
   "eslintConfig": {
     "extends": [

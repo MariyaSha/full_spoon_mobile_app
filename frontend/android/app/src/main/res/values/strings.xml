@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Full Spoon</string>
+    <string name="title_activity_main">Full Spoon</string>
+    <string name="package_name">com.fullspoon.app</string>
+    <string name="custom_url_scheme">com.fullspoon.app</string>
+</resources>
