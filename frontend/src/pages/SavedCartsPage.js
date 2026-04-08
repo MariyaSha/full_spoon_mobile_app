@@ -1,13 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopBar from '../components/TopBar';
 import MenuDrawer from '../components/MenuDrawer';
 import FilterPanel from '../components/FilterPanel';
+import { useCart } from '../context/CartContext';
 
 const SavedCartsPage = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [savedCarts, setSavedCarts] = useState([]);
+  const { addToCart, clearCart } = useCart();
+
+  // Load saved carts from localStorage
+  useEffect(() => {
+    const savedCartsJson = localStorage.getItem('savedCarts');
+    if (savedCartsJson) {
+      const carts = JSON.parse(savedCartsJson);
+      // Sort by savedAt date (newest first)
+      carts.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
+      setSavedCarts(carts);
+    }
+  }, []);
 
   const handleMenuToggle = () => {
     setIsFilterOpen(false);
@@ -19,12 +33,18 @@ const SavedCartsPage = () => {
     setIsFilterOpen(!isFilterOpen);
   };
 
-  const savedCarts = [
-    { id: 1, name: 'game night', date: '01.04.26', testId: 'saved-cart-1' },
-    { id: 2, name: 'easter', date: '07.04.26', testId: 'saved-cart-2' },
-    { id: 3, name: 'camping', date: '02.08.25', testId: 'saved-cart-3' },
-    { id: 4, name: 'party', date: '07.07.25', testId: 'saved-cart-4' }
-  ];
+  const handleLoadCart = (cart) => {
+    // Clear current cart
+    clearCart();
+    
+    // Load saved cart recipe IDs
+    cart.recipeIds.forEach(recipeId => {
+      addToCart(recipeId);
+    });
+    
+    // Navigate to cart page to show loaded cart
+    navigate('/cart');
+  };
 
   return (
     <div className="min-h-screen bg-white" data-testid="saved-carts-page">
@@ -57,18 +77,37 @@ const SavedCartsPage = () => {
         </div>
         
         {/* Saved Carts List */}
-        <div className="space-y-3">
-          {savedCarts.map((cart) => (
+        {savedCarts.length === 0 ? (
+          <div className="text-center py-12">
+            <svg className="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+            </svg>
+            <p className="text-gray-500 text-lg mb-2">No saved carts yet</p>
+            <p className="text-gray-400 text-sm mb-6">
+              Save your cart from the cart page to access it later
+            </p>
             <button
-              key={cart.id}
-              className="w-full flex items-center justify-between p-4 bg-white border-2 border-gray-200 rounded-xl hover:border-accent hover:shadow-lg active:scale-98 transition-all duration-200"
-              data-testid={cart.testId}
+              onClick={() => navigate('/cart')}
+              className="bg-accent text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors"
             >
-              <span className="text-lg font-medium text-gray-800">{cart.name}</span>
-              <span className="text-lg font-semibold text-gray-600">{cart.date}</span>
+              Go to Cart
             </button>
-          ))}
-        </div>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {savedCarts.map((cart, index) => (
+              <button
+                key={cart.id}
+                onClick={() => handleLoadCart(cart)}
+                className="w-full flex items-center justify-between p-4 bg-white border-2 border-gray-200 rounded-xl hover:border-accent hover:shadow-lg active:scale-98 transition-all duration-200"
+                data-testid={`saved-cart-${index}`}
+              >
+                <span className="text-lg font-medium text-gray-800">{cart.name}</span>
+                <span className="text-lg font-semibold text-gray-600">{cart.displayDate}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </main>
     </div>
   );

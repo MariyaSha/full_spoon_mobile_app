@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import TopBar from '../components/TopBar';
 import MenuDrawer from '../components/MenuDrawer';
 import FilterPanel from '../components/FilterPanel';
+import { useCart } from '../context/CartContext';
 
 const SaveCartPage = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [cartName, setCartName] = useState('');
+  const { cartRecipeIds } = useCart();
 
   const handleMenuToggle = () => {
     setIsFilterOpen(false);
@@ -18,6 +20,44 @@ const SaveCartPage = () => {
   const handleFilterToggle = () => {
     setIsMenuOpen(false);
     setIsFilterOpen(!isFilterOpen);
+  };
+
+  const handleSaveCart = () => {
+    if (!cartName.trim()) {
+      alert('Please enter a cart name');
+      return;
+    }
+
+    if (cartRecipeIds.length === 0) {
+      alert('Your cart is empty. Add recipes before saving.');
+      return;
+    }
+
+    // Get existing saved carts from localStorage
+    const savedCartsJson = localStorage.getItem('savedCarts');
+    const savedCarts = savedCartsJson ? JSON.parse(savedCartsJson) : [];
+
+    // Create new saved cart object
+    const newSavedCart = {
+      id: Date.now(), // Use timestamp as unique ID
+      name: cartName.trim(),
+      recipeIds: [...cartRecipeIds], // Save current cart recipe IDs
+      savedAt: new Date().toISOString(),
+      displayDate: new Date().toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit'
+      }).replace(/\//g, '.')
+    };
+
+    // Add to saved carts array
+    savedCarts.push(newSavedCart);
+
+    // Save back to localStorage
+    localStorage.setItem('savedCarts', JSON.stringify(savedCarts));
+
+    // Navigate to saved carts page
+    navigate('/saved-carts');
   };
 
   return (
@@ -73,6 +113,7 @@ const SaveCartPage = () => {
           
           {/* Save Button */}
           <button
+            onClick={handleSaveCart}
             className="w-full bg-accent text-white py-4 rounded-xl font-semibold text-lg hover:bg-orange-600 active:scale-98 transition-all"
             data-testid="save-button"
           >
