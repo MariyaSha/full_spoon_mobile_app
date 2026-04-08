@@ -47,7 +47,7 @@ const SavedCartsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white" data-testid="saved-carts-page">
+    <div className="min-h-screen bg-white dark:bg-gray-900" data-testid="saved-carts-page">
       <TopBar 
         onMenuToggle={handleMenuToggle}
         onFilterToggle={handleFilterToggle}
@@ -73,7 +73,7 @@ const SavedCartsPage = () => {
           <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
-          <h1 className="text-2xl font-bold text-primary">SAVED CARTS</h1>
+          <h1 className="text-2xl font-bold text-primary dark:text-white">SAVED CARTS</h1>
         </div>
         
         {/* Saved Carts List */}
@@ -99,10 +99,10 @@ const SavedCartsPage = () => {
               <button
                 key={cart.id}
                 onClick={() => handleLoadCart(cart)}
-                className="w-full flex items-center justify-between p-4 bg-white border-2 border-gray-200 rounded-xl hover:border-accent hover:shadow-lg active:scale-98 transition-all duration-200"
+                className="w-full flex items-center justify-between p-4 bg-white border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-accent hover:shadow-lg active:scale-98 transition-all duration-200"
                 data-testid={`saved-cart-${index}`}
               >
-                <span className="text-lg font-medium text-gray-800">{cart.name}</span>
+                <span className="text-lg font-medium text-gray-800 dark:text-gray-100">{cart.name}</span>
                 <span className="text-lg font-semibold text-gray-600">{cart.displayDate}</span>
               </button>
             ))}

@@ -280,15 +280,15 @@ const CartPage = () => {
       <FilterPanel isOpen={isFilterOpen} />
       
       {/* Action Icons Row */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center space-x-4">
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700 px-4 py-3 flex items-center space-x-4">
         {/* Save Icon */}
         <button 
           onClick={() => navigate('/save-cart')}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors active:scale-95"
+          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors active:scale-95"
           aria-label="Save cart"
           data-testid="save-cart-button"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
           </svg>
         </button>
@@ -321,7 +321,7 @@ const CartPage = () => {
       <main className="p-4 pb-8">
         {/* Shopping Checklist */}
         {loading ? (
-          <div className="text-center py-8 text-gray-500">Loading ingredients...</div>
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">Loading ingredients...</div>
         ) : aggregatedIngredients.length === 0 ? (
           <div className="text-center py-12">
             <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -343,7 +343,7 @@ const CartPage = () => {
             {aggregatedIngredients.map((item) => (
               <label
                 key={item.id}
-                className="flex items-center justify-between p-4 bg-white border-2 border-gray-200 rounded-xl hover:border-gray-300 cursor-pointer transition-colors"
+                className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-gray-300 cursor-pointer transition-colors"
                 data-testid={`${item.testId}-label`}
               >
                 <div className="flex items-center flex-1">
@@ -354,7 +354,7 @@ const CartPage = () => {
                     className="w-6 h-6 text-accent border-gray-300 rounded focus:ring-accent focus:ring-2 cursor-pointer"
                     data-testid={item.testId}
                   />
-                  <span className="ml-4 text-lg font-medium text-gray-800">{item.name}</span>
+                  <span className="ml-4 text-lg font-medium text-gray-800 dark:text-gray-100">{item.name}</span>
                 </div>
                 <span className="text-lg font-semibold text-gray-700">{item.quantity}</span>
               </label>
@@ -372,7 +372,7 @@ const CartPage = () => {
             <svg className="w-7 h-7 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            <span className="text-xl font-bold text-gray-800">CART RECIPES</span>
+            <span className="text-xl font-bold text-gray-800 dark:text-gray-100">CART RECIPES</span>
           </div>
         </button>
       </main>

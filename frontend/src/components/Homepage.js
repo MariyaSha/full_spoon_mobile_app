@@ -28,7 +28,7 @@ const Homepage = () => {
           <button
             key={category.id}
             onClick={() => handleCategoryClick(category.path)}
-            className="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-200 rounded-xl p-6 min-h-[140px] flex items-center justify-center text-center hover:border-accent hover:shadow-lg active:scale-98 transition-all duration-200 group"
+            className="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-200 dark:border-gray-700 rounded-xl p-6 min-h-[140px] flex items-center justify-center text-center hover:border-accent hover:shadow-lg active:scale-98 transition-all duration-200 group"
             data-testid={category.testId}
           >
             <span className="text-base font-bold text-gray-800 group-hover:text-accent transition-colors leading-tight">

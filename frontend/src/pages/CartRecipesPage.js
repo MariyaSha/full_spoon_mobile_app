@@ -45,7 +45,7 @@ const CartRecipesPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white" data-testid="cart-recipes-page">
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors" data-testid="cart-recipes-page">
       <TopBar 
         onMenuToggle={handleMenuToggle}
         onFilterToggle={() => {}} // Disabled - we'll use custom icons instead
@@ -56,7 +56,7 @@ const CartRecipesPage = () => {
       <MenuDrawer isOpen={isMenuOpen} />
       
       {/* Custom Action Icons Row */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center space-x-4">
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center space-x-4">
         {/* Save Cart Icon */}
         <button 
           onClick={() => navigate('/save-cart')}
@@ -112,7 +112,7 @@ const CartRecipesPage = () => {
         </div>
         
         {loading ? (
-          <div className="text-center py-8 text-gray-500">Loading cart recipes...</div>
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">Loading cart recipes...</div>
         ) : cartRecipes.length === 0 ? (
           <div className="text-center py-12">
             <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -131,7 +131,7 @@ const CartRecipesPage = () => {
           </div>
         ) : (
           <>
-            <div className="mb-4 text-sm text-gray-600">
+            <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
               {cartRecipes.length} {cartRecipes.length === 1 ? 'recipe' : 'recipes'} in cart
             </div>
             <div className="space-y-4">

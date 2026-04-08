@@ -88,7 +88,7 @@ const FilterPanel = ({ isOpen }) => {
 
   return (
     <div 
-      className={`overflow-hidden transition-all duration-300 ease-in-out bg-white border-b border-gray-200 ${
+      className={`overflow-hidden transition-all duration-300 ease-in-out bg-white border-b border-gray-200 dark:border-gray-700 ${
         isOpen ? 'max-h-[600px] opacity-100 overflow-y-auto' : 'max-h-0 opacity-0'
       }`}
       data-testid="filter-panel"
@@ -97,14 +97,14 @@ const FilterPanel = ({ isOpen }) => {
         {/* Clear Filters Button */}
         <button
           onClick={clearAllFilters}
-          className="flex items-center justify-between px-6 py-3 w-full hover:bg-gray-50 transition-colors border-b-2 border-gray-300"
+          className="flex items-center justify-between px-6 py-3 w-full hover:bg-gray-50 dark:bg-gray-900 transition-colors border-b-2 border-gray-300"
           data-testid="clear-filters-button"
         >
           <div className="flex items-center space-x-3">
             <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
-            <span className="text-base font-semibold text-gray-800">Clear All Filters</span>
+            <span className="text-base font-semibold text-gray-800 dark:text-gray-100">Clear All Filters</span>
           </div>
           {getTotalSelectedCount() > 0 && (
             <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
@@ -119,18 +119,18 @@ const FilterPanel = ({ isOpen }) => {
           const selectedCount = selectedFilters[section.id].length;
 
           return (
-            <div key={section.id} className="border-b border-gray-200">
+            <div key={section.id} className="border-b border-gray-200 dark:border-gray-700">
               {/* Section Header */}
               <button
                 onClick={() => toggleSection(section.id)}
-                className="flex items-center justify-between px-6 py-3 w-full hover:bg-gray-50 transition-colors"
+                className="flex items-center justify-between px-6 py-3 w-full hover:bg-gray-50 dark:bg-gray-900 transition-colors"
                 data-testid={`filter-section-${section.id}`}
               >
                 <div className="flex items-center space-x-3">
-                  <div className="text-gray-600">
+                  <div className="text-gray-600 dark:text-gray-400">
                     {section.icon}
                   </div>
-                  <span className="text-base font-medium text-gray-800">{section.title}</span>
+                  <span className="text-base font-medium text-gray-800 dark:text-gray-100">{section.title}</span>
                   {selectedCount > 0 && (
                     <span className="bg-accent text-white text-xs font-bold px-2 py-1 rounded-full">
                       {selectedCount}
@@ -149,7 +149,7 @@ const FilterPanel = ({ isOpen }) => {
 
               {/* Section Options */}
               <div className={`overflow-hidden transition-all duration-200 ${isExpanded ? 'max-h-[400px]' : 'max-h-0'}`}>
-                <div className="bg-gray-50 py-2">
+                <div className="bg-gray-50 dark:bg-gray-900 py-2">
                   {section.options.map((option) => (
                     <label
                       key={option.id}
@@ -163,7 +163,7 @@ const FilterPanel = ({ isOpen }) => {
                         className="w-4 h-4 text-accent border-gray-300 rounded focus:ring-accent focus:ring-2 cursor-pointer"
                         data-testid={`filter-${section.id}-${option.id}`}
                       />
-                      <span className="ml-3 text-sm text-gray-700">{option.label}</span>
+                      <span className="ml-3 text-sm text-gray-700 dark:text-gray-300">{option.label}</span>
                     </label>
                   ))}
                 </div>
