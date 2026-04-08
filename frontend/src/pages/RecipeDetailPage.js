@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import MenuDrawer from '../components/MenuDrawer';
 import FilterPanel from '../components/FilterPanel';
+import { useLovedRecipes } from '../context/LovedRecipesContext';
 import { 
   getRecipeById, 
   parseDuration, 
@@ -19,6 +20,8 @@ const RecipeDetailPage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
+  
+  const { isRecipeLoved, toggleLovedRecipe } = useLovedRecipes();
 
   useEffect(() => {
     const loadRecipe = async () => {
@@ -54,6 +57,12 @@ const RecipeDetailPage = () => {
     if (!recipe || !recipe.Images) return;
     setCurrentImageIndex((prev) => (prev === recipe.Images.length - 1 ? 0 : prev + 1));
   };
+  
+  const handleToggleLoved = () => {
+    if (recipe) {
+      toggleLovedRecipe(recipe.RecipeId);
+    }
+  };
 
   if (loading) {
     return (
@@ -80,6 +89,7 @@ const RecipeDetailPage = () => {
   const instructions = getInstructions(recipe);
   const totalImages = recipe.Images ? recipe.Images.length : 0;
   const starRating = getStarRating(recipe.AggregatedRating);
+  const isLoved = isRecipeLoved(recipe.RecipeId);
 
   return (
     <div className="min-h-screen bg-white" data-testid="recipe-detail-page">
@@ -94,12 +104,12 @@ const RecipeDetailPage = () => {
           <div className="flex items-center space-x-4">
             {/* Heart Icon */}
             <button 
-              onClick={() => navigate('/loved-recipes')}
+              onClick={handleToggleLoved}
               className="p-2 hover:bg-gray-100 rounded-full transition-colors active:scale-95"
-              aria-label="Loved recipes"
+              aria-label={isLoved ? "Remove from loved recipes" : "Add to loved recipes"}
               data-testid="heart-icon-button"
             >
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <svg className={`w-6 h-6 transition-colors ${isLoved ? 'fill-current text-red-500' : 'fill-current text-gray-300'}`} viewBox="0 0 24 24">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
             </button>
@@ -123,12 +133,12 @@ const RecipeDetailPage = () => {
           <div className="flex items-center space-x-4">
             {/* Heart Icon (duplicate for second row) */}
             <button 
-              onClick={() => navigate('/loved-recipes')}
+              onClick={handleToggleLoved}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors active:scale-95"
-              aria-label="Add to loved"
+              aria-label={isLoved ? "Remove from loved" : "Add to loved"}
               data-testid="add-to-loved-button"
             >
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <svg className={`w-6 h-6 transition-colors ${isLoved ? 'fill-current text-red-500' : 'fill-current text-gray-300'}`} viewBox="0 0 24 24">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
             </button>
