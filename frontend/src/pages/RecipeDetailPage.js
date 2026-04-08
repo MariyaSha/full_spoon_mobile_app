@@ -71,7 +71,12 @@ const RecipeDetailPage = () => {
     );
   }
 
-  const ingredients = formatIngredients(recipe.RecipeIngredientQuantities, recipe.RecipeIngredientParts);
+  const ingredients = formatIngredients(
+    recipe.RecipeIngredientQuantities, 
+    recipe.RecipeIngredientMeasurements,
+    recipe.RecipeIngredientParts,
+    recipe.RecipeIngredientInstructions
+  );
   const instructions = getInstructions(recipe);
   const totalImages = recipe.Images ? recipe.Images.length : 0;
   const starRating = getStarRating(recipe.AggregatedRating);
@@ -264,15 +269,28 @@ const RecipeDetailPage = () => {
               ingredients.map((ingredient, index) => (
                 <div 
                   key={index}
-                  className="flex items-center justify-between py-2"
+                  className="flex items-start justify-between py-2"
                   data-testid={`ingredient-${index}`}
                 >
-                  <span className="text-base font-medium text-gray-800 capitalize">
-                    {ingredient.name}
-                  </span>
-                  <span className="text-base font-semibold text-gray-700">
-                    {ingredient.quantity || '—'}
-                  </span>
+                  <div className="flex-1">
+                    <span className="text-base font-medium text-gray-800 capitalize">
+                      {ingredient.name}
+                    </span>
+                    {ingredient.instruction && (
+                      <span className="text-sm text-gray-600 italic ml-2">
+                        ({ingredient.instruction})
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-base font-semibold text-gray-700 ml-4 text-right whitespace-nowrap">
+                    {ingredient.quantity && (
+                      <>
+                        {ingredient.quantity}
+                        {ingredient.measurement && ` ${ingredient.measurement}`}
+                      </>
+                    )}
+                    {!ingredient.quantity && '—'}
+                  </div>
                 </div>
               ))
             ) : (

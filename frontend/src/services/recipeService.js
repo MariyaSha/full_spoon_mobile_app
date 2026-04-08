@@ -73,14 +73,16 @@ export const parseDuration = (duration) => {
 };
 
 /**
- * Format ingredients list with quantities
+ * Format ingredients list with quantities, measurements, and instructions
  */
-export const formatIngredients = (quantities, parts) => {
-  if (!quantities || !parts) return [];
+export const formatIngredients = (quantities, measurements, parts, instructions) => {
+  if (!parts) return [];
   
   return parts.map((part, index) => ({
     name: part,
-    quantity: quantities[index] || ''
+    quantity: quantities && quantities[index] ? quantities[index] : '',
+    measurement: measurements && measurements[index] && measurements[index] !== 'None' ? measurements[index] : '',
+    instruction: instructions && instructions[index] && instructions[index] !== 'None' ? instructions[index] : ''
   }));
 };
 
