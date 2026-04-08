@@ -16,6 +16,44 @@ const CartPage = () => {
   
   const { cartRecipeIds } = useCart();
 
+  // Helper function to normalize measurement units (handle plural/singular)
+  const normalizeMeasurement = (measurement) => {
+    if (!measurement) return '';
+    
+    let normalized = measurement.toLowerCase().trim();
+    
+    // Convert common plural forms to singular
+    const pluralMap = {
+      'cups': 'cup',
+      'tablespoons': 'tablespoon',
+      'teaspoons': 'teaspoon',
+      'ounces': 'ounce',
+      'pounds': 'pound',
+      'grams': 'gram',
+      'kilograms': 'kilogram',
+      'milliliters': 'milliliter',
+      'liters': 'liter',
+      'cloves': 'clove',
+      'stalks': 'stalk',
+      'slices': 'slice',
+      'pieces': 'piece',
+      'pinches': 'pinch',
+      'dashes': 'dash',
+      'cans': 'can',
+      'packages': 'package',
+      'bunches': 'bunch'
+    };
+    
+    // Check if the measurement ends with any plural form and convert to singular
+    for (const [plural, singular] of Object.entries(pluralMap)) {
+      if (normalized === plural) {
+        return singular;
+      }
+    }
+    
+    return normalized;
+  };
+
   // Aggregate ingredients from all cart recipes
   useEffect(() => {
     const aggregateIngredients = async () => {
@@ -55,10 +93,8 @@ const CartPage = () => {
             // Normalize ingredient name (lowercase, trim)
             const normalizedName = ingredient.name.toLowerCase().trim();
             
-            // Normalize measurement (lowercase, trim, handle "None")
-            const normalizedMeasurement = ingredient.measurement 
-              ? ingredient.measurement.toLowerCase().trim() 
-              : '';
+            // Normalize measurement (lowercase, trim, plurals to singular)
+            const normalizedMeasurement = normalizeMeasurement(ingredient.measurement);
             
             // Parse quantity (convert to number if possible)
             const quantity = ingredient.quantity 
