@@ -11,6 +11,7 @@ const CartRecipesPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartRecipes, setCartRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showEmptyConfirm, setShowEmptyConfirm] = useState(false);
   
   const { cartRecipeIds, clearCart } = useCart();
 
@@ -36,6 +37,11 @@ const CartRecipesPage = () => {
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleEmptyCart = () => {
+    clearCart();
+    setShowEmptyConfirm(false);
   };
 
   return (
@@ -76,11 +82,7 @@ const CartRecipesPage = () => {
         </button>
         {/* Empty Cart Icon */}
         <button 
-          onClick={() => {
-            if (window.confirm('Are you sure you want to empty your cart? This will remove all recipes and ingredients.')) {
-              clearCart();
-            }
-          }}
+          onClick={() => setShowEmptyConfirm(true)}
           className="p-2 hover:bg-red-50 rounded-lg transition-colors active:scale-95 text-red-600"
           aria-label="Empty cart"
           data-testid="empty-cart-button"
@@ -146,6 +148,32 @@ const CartRecipesPage = () => {
           </>
         )}
       </main>
+
+      {/* Empty Cart Confirmation Modal */}
+      {showEmptyConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowEmptyConfirm(false)}>
+          <div className="bg-white rounded-xl p-6 max-w-md mx-4 shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">Empty Cart?</h2>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to empty your cart? This will remove all recipes and ingredients.
+            </p>
+            <div className="flex space-x-3">
+              <button
+                onClick={() => setShowEmptyConfirm(false)}
+                className="flex-1 px-4 py-3 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleEmptyCart}
+                className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors"
+              >
+                Empty Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
