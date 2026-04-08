@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopBar from '../components/TopBar';
 import MenuDrawer from '../components/MenuDrawer';
-import FilterPanel from '../components/FilterPanel';
 import RecipeCard from '../components/RecipeCard';
 import { useCart } from '../context/CartContext';
 import { loadRecipes } from '../services/recipeService';
@@ -10,7 +9,6 @@ import { loadRecipes } from '../services/recipeService';
 const CartRecipesPage = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [cartRecipes, setCartRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   
@@ -37,26 +35,46 @@ const CartRecipesPage = () => {
   }, [cartRecipeIds]);
 
   const handleMenuToggle = () => {
-    setIsFilterOpen(false);
     setIsMenuOpen(!isMenuOpen);
-  };
-
-  const handleFilterToggle = () => {
-    setIsMenuOpen(false);
-    setIsFilterOpen(!isFilterOpen);
   };
 
   return (
     <div className="min-h-screen bg-white" data-testid="cart-recipes-page">
       <TopBar 
         onMenuToggle={handleMenuToggle}
-        onFilterToggle={handleFilterToggle}
+        onFilterToggle={() => {}} // Disabled - we'll use custom icons instead
         onLovedClick={() => navigate('/loved-recipes')}
         onCartClick={() => navigate('/cart')}
       />
       
       <MenuDrawer isOpen={isMenuOpen} />
-      <FilterPanel isOpen={isFilterOpen} />
+      
+      {/* Custom Action Icons Row */}
+      <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center space-x-4">
+        {/* Save Cart Icon */}
+        <button 
+          onClick={() => navigate('/save-cart')}
+          className="p-2 hover:bg-gray-100 rounded-lg transition-colors active:scale-95"
+          aria-label="Save cart"
+          data-testid="save-cart-button"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+          </svg>
+        </button>
+        
+        {/* Saved Carts Icon */}
+        <button 
+          onClick={() => navigate('/saved-carts')}
+          className="p-2 hover:bg-gray-100 rounded-lg transition-colors active:scale-95"
+          aria-label="View saved carts"
+          data-testid="saved-carts-button"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        </button>
+      </div>
       
       <main className="p-4 pb-8">
         <div className="flex items-center mb-6">
