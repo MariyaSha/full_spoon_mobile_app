@@ -8,7 +8,12 @@ const TopBar = ({ onMenuToggle, onFilterToggle, onLovedClick, onCartClick }) => 
     <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 transition-colors">
       {/* Logo and Icons Row */}
       <div className="flex items-center justify-between px-4 py-3">
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-3">
+          <img 
+            src={isDarkMode ? "/logos/full_spoon_white.png" : "/logos/full_spoon_black.png"}
+            alt="Full Spoon Logo"
+            className="h-8 w-8"
+          />
           <h1 className="text-xl font-bold text-primary dark:text-white" data-testid="logo-text">FULL SPOON</h1>
         </div>
         
